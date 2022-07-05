@@ -24,9 +24,11 @@ jobs:
       - name: Check if migration required
         uses: actions/github-script@v6
         id: migration-required
+        env:
+          PR_BODY: ${{ steps.pr.outputs.pr_body }}
         with:
           script: |
-            const migMatch = "${{ steps.pr.outputs.pr_body }}".match(/Migration Steps:\n- ./);
+            const migMatch = process.env.PR_BODY.match(/Migration Steps:\n- ./);
             return !!migMatch;
 
       - name: Echo result
