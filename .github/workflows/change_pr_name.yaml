@@ -34,7 +34,7 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const bodyMatched = process.env.PR_BODY.match(/## Migration Steps(\n|\r|\r\n)- ./);
+            const bodyMatched = process.env.PR_BODY.match(/## Migration Steps(\n|\r|\r\n)*- ./);
             const titleMatched = process.env.PR_TITLE.match(/^\[migration\] (.+)$/);
             if (bodyMatched && !titleMatched) {
               return `[migration] ${process.env.PR_TITLE}`;
