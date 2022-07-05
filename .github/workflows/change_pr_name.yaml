@@ -3,8 +3,14 @@ name: "migration check"
 on:
   workflow_dispatch: {}
   pull_request:
-    branches:
-      - "test"
+    types:
+      - opened
+      - reopened
+      - edited
+    branches-ignore:
+      - platdev
+      - appdev
+      - main
 
 jobs:
   migration-check:
