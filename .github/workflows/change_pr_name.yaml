@@ -26,7 +26,7 @@ jobs:
         id: migration-required
         with:
           script: |
-            const migMatch = 'steps.pr.outputs.pr_body'.match(/Migration Steps:\n- ./);
+            const migMatch = "${{ steps.pr.outputs.pr_body }}".match(/Migration Steps:\n- ./);
             return !!migMatch;
 
       - name: Echo result
