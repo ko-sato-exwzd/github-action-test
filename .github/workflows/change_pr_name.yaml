@@ -25,16 +25,29 @@ jobs:
       - uses: 8BitJonny/gh-get-current-pr@2.1.0
         id: pr
 
-      - name: Check if migration required
+      - name: Get updated PR title
         uses: actions/github-script@v6
-        id: migration-required
+        id: updated-pr-title
         env:
+          PR_TITLE: ${{ steps.pr.outputs.pr_title }}
           PR_BODY: ${{ steps.pr.outputs.pr_body }}
         with:
+          result-encoding: string
           script: |
-            const migMatch = process.env.PR_BODY.match(/## Migration Steps(\n|\r|\r\n)- ./);
-            return !!migMatch;
+            const bodyMatched = process.env.PR_BODY.match(/## Migration Steps(\n|\r|\r\n)- ./);
+            const titleMatched = process.env.PR_TITLE.match(/^\[migration\] (.+)$/);
+            if (bodyMatched && !titleMatched) {
+              return `[migration] ${process.env.PR_TITLE}`;
+            }
+            if (!bodyMatched && titleMatched) {
+              return titleMatched[1];
+            }
+            return "";
 
-      - name: Echo result
-        run: echo "${{ steps.migration-required.outputs.result }}"
-
+      - name: Update PR title
+        if: steps.updated-pr-title.outputs.result != ''
+        uses: tzkhan/pr-update-action@v2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          title-update-action: replace
+          title-template: "${{ steps.updated-pr-title.outputs.result }}"
