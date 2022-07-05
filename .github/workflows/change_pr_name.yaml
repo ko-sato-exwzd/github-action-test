@@ -3,7 +3,7 @@ name: "migration check"
 on:
   pull_request:
     branches:
-      - "!main"
+      - "test"
 
 jobs:
   migration-check:
