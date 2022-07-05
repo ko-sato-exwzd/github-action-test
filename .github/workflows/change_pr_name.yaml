@@ -28,7 +28,7 @@ jobs:
           PR_BODY: ${{ steps.pr.outputs.pr_body }}
         with:
           script: |
-            const migMatch = process.env.PR_BODY.match(## Migration Steps(\n|\r|\r\n)- ./);
+            const migMatch = process.env.PR_BODY.match(/## Migration Steps(\n|\r|\r\n)- ./);
             return !!migMatch;
 
       - name: Echo result
