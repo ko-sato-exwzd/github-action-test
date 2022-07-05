@@ -1,0 +1,31 @@
+name: "migration check"
+
+on:
+  pull_request:
+    branches:
+      - "!main"
+
+jobs:
+  migration-check:
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - uses: 8BitJonny/gh-get-current-pr@2.1.0
+        id: pr
+
+      - name: Check if migration required
+        uses: actions/github-script@v6
+        id: migration-required
+        with:
+          script: |
+            const migMatch = 'steps.pr.outputs.pr_body'.match(/Migration Steps:\n- ./);
+            return !!migMatch;
+
+      - name: Echo result
+        run: echo "${ steps.migration-required.outputs.result }"
+
