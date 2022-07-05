@@ -22,15 +22,15 @@ jobs:
         with:
           node-version: "16"
 
-      - uses: 8BitJonny/gh-get-current-pr@2.1.0
-        id: pr
+      # - uses: 8BitJonny/gh-get-current-pr@2.1.0
+      #   id: pr
 
       - name: Get updated PR title
         uses: actions/github-script@v6
         id: updated-pr-title
         env:
-          PR_TITLE: ${{ steps.pr.outputs.pr_title }}
-          PR_BODY: ${{ steps.pr.outputs.pr_body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
         with:
           result-encoding: string
           script: |
@@ -49,5 +49,7 @@ jobs:
         uses: tzkhan/pr-update-action@v2
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          base-branch-regex: main
+          head-branch-regex: ${{ github.event.pull_request.head.ref }}
           title-update-action: replace
           title-template: "${{ steps.updated-pr-title.outputs.result }}"
