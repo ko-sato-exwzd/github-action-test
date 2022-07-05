@@ -25,6 +25,7 @@ jobs:
         uses: actions/github-script@v6
         id: migration-required
         with:
+          result-encoding: string
           script: |
             const migMatch = 'steps.pr.outputs.pr_body'.match(/Migration Steps:\n- ./);
             return !!migMatch;
